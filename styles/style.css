@@ -1,0 +1,23 @@
+.display\:flex{
+    display: flex;
+}
+
+.justify-content\:space-between{
+    justify-content: space-between;
+}
+
+.align-items\:center{
+    align-items: center;
+}
+
+.width\:12px{
+    width: 12px;
+}
+
+.width\:32px{
+    width: 32px;
+}
+
+.font-size\:32px{
+    font-size: 32px;
+}

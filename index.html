@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpine.js To do list</title>
+    <link rel="stylesheet" href="./styles/normalizev8.0.1.css">
+    <link rel="stylesheet" href="./styles/concretev2.0.3.css">
+    <link rel="stylesheet" href="./styles/style.css">
+    <script src="./alpinev3.10.2.js"></script>
+  </head>
+  
+  <body>
+    <main x-data="{
+      inputAddTodoValue: '',
+      inputEditTodoValue: '',
+      todos: [],
+      addTodo(){
+        if(this.inputAddTodoValue.length){
+          this.todos = [
+            ...this.todos, 
+            {
+              id: this.todos.length,
+              text: this.inputAddTodoValue
+            }
+          ]
+          this.inputAddTodoValue = ''
+        }
+      },
+      showEditTodoForm(id){
+        this.todos = this.todos.map(item => {
+
+            if(item.id === id){
+              this.inputEditTodoValue = item.text
+            }
+
+            return {
+              ...item,
+              isEditing: item.id === id
+            }
+          }
+        )
+      },
+      editTodo(id){
+        this.todos = this.todos.map(item => ({
+            ...item,
+            text: item.id === id ? this.inputEditTodoValue : item.text,
+            isEditing: false
+          })
+        )
+      },
+      cancelEditTodo(){
+        this.todos = this.todos.map(item => ({
+            ...item,
+            isEditing: false
+          })
+        )
+      },
+      removeTodo(id){
+        this.todos = this.todos.filter(item => item.id !== id)
+      }
+    }">
+      <div class="display:flex justify-content:space-between align-items:center">
+        <h1 class="font-size:32px">Alpine.js To do list</h1>
+        <a href="https://github.com/RodrigoWebDev/alpine-todo-list" target="_blank">
+          <img class="width:32px" src="./assets/icons/github.svg" />
+        </a>
+      </div>
+
+      <form @submit.prevent="addTodo()">    
+        <input 
+          placeholder="Type here..." 
+          type="text" 
+          name="todo" 
+          x-model="inputAddTodoValue"
+        />
+
+        <ul>
+          <template x-for="todo in todos">
+            <li>
+              <div x-show="!todo.isEditing">
+                <span x-text="todo.text">Item</span>
+                &nbsp;&nbsp;&nbsp;
+                <button type="button" @click="removeTodo(todo.id)">x</button>
+                <button type="button" @click="showEditTodoForm(todo.id)">
+                  <img class="width:12px" src="./assets/icons/pen.svg" />
+                </button>
+              </div>
+
+              <form 
+                id="editionForm" 
+                x-show="todo.isEditing"
+                @submit.prevent="editTodo(todo.id)"
+              >
+                <input x-model="inputEditTodoValue" type="text" placeholder="Edit your todo..."/>
+                <button type="button" @click="cancelEditTodo()">Cancel</button>
+              </form>
+            </li>
+          </template>
+        </ul>
+      </form>
+    </main>
+  </body>
+</html>
